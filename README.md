@@ -16,4 +16,5 @@
 <ul>
   <li>c# Winfrom </li>  
   <li>c++</li>
+  <li>python</li>
 </ul>
