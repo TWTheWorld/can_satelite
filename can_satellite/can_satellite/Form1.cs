@@ -15,9 +15,13 @@ namespace can_satellite
     {
         int a=1;
         string str;
+        int xyzactivation = 0;//자이로 센서 활성화 on/off 변수
+        int gpsactivation = 0;
         public Form1()
         {
             InitializeComponent();
+            //웹브라우져 자바스크립트 오류 없애기
+            webBrowser1.ScriptErrorsSuppressed = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -54,6 +58,7 @@ namespace can_satellite
                 serialPort1.Open();  //시리얼포트 열기
 
                 label1.Text = "포트가 열렸습니다.";
+                listBox1.Items.Add("포트가 열렸습니다");
                 portsearch.Enabled = false;  //COM포트설정 콤보박스 비활성화
             }
             else  //시리얼포트가 열려 있으면
@@ -65,22 +70,23 @@ namespace can_satellite
 
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-           
             this.Invoke(new EventHandler(MySerialReceived));
         }
         private void MySerialReceived(object s, EventArgs e)  //여기에서 수신 데이타를 사용자의 용도에 따라 처리한다.
         {
             String ReceiveData = serialPort1.ReadLine();  //시리얼 버터에 수신된 데이타를 ReceiveData 읽어오기
-            
-            int data_x=0, data_y=0, data_z=0;
-            //try {
-            if (ReceiveData.Length == 13)
+            if (xyzactivation == 1)
             {
-                data_x = Convert.ToInt32(ReceiveData.Substring(1, 3));
-                data_y = Convert.ToInt32(ReceiveData.Substring(5, 3));
-                data_z = Convert.ToInt32(ReceiveData.Substring(9, 3));
-                xyzchart_drow(data_x, data_y, data_z);
-            }            
+                int data_x = 0, data_y = 0, data_z = 0;
+                //try {
+                if (ReceiveData.Length == 13)
+                {
+                    data_x = Convert.ToInt32(ReceiveData.Substring(1, 3));
+                    data_y = Convert.ToInt32(ReceiveData.Substring(5, 3));
+                    data_z = Convert.ToInt32(ReceiveData.Substring(9, 3));
+                    xyzchart_drow(data_x, data_y, data_z);
+                }
+            }
         }
         private void xyzchart_drow(int data_x, int data_y, int data_z)//자이로 센서 chart 그리는 함수
         {
@@ -104,6 +110,38 @@ namespace can_satellite
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             System.Diagnostics.Process.GetCurrentProcess().Kill();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (xyzactivation == 0)
+            {
+                button1.Text = "OFF";
+                xyzactivation = 1;
+                listBox1.Items.Add("자이로센서 ON");
+            }
+            else
+            {
+                button1.Text = "ON";
+                xyzactivation = 0;
+                listBox1.Items.Add("자이로센서 OFF");
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (gpsactivation == 0)
+            {
+                button2.Text = "OFF";
+                xyzactivation = 1;
+                listBox1.Items.Add("GPS ON");
+            }
+            else
+            {
+                button2.Text = "ON";
+                xyzactivation = 0;
+                listBox1.Items.Add("GPS OFF");
+            }
         }
     }
 }

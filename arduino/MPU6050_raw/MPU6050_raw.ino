@@ -34,11 +34,8 @@ void loop() {
 //int num1 = 12345;
 //char c = 'A';
 //char str[] = "Hello";
-sprintf(sum , "x%03dY%03dZ%03d", ax, ay, az);
+  sprintf(sum , "x%03dY%03dZ%03d", ax, ay, az);
 
-Serial.println((String)sum);
-   //Serial.println("y"+(String)ay);
-   //Serial.println("z"+(String)az);
-   delay(1000);
-   //Serial.println(gz);
+  Serial.println((String)sum);
+  delay(1000);
 }
