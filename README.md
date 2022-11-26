@@ -7,6 +7,9 @@
   <li>raspberry pi camera</li>
   <li>3축 자이로 센서 MPU6050</li> 
   <li>NRF24L01 장거리 무선통신 안테나 모듈</li>
+  <li>MQ-135 대기 오염 센서</li>
+  <li>gps 모듈</li>
+  <li>DHT11 온습도 센서</li>
 </ul>
 
 <hr>
