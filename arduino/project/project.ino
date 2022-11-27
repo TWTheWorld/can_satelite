@@ -66,6 +66,7 @@ void setup() {
   gps = TinyGPS();
 }
 void loop() {
+  delay(1);
  //자이로 센서 가져오기
  accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
    ///온습도 센서값 가져오기
@@ -119,16 +120,7 @@ void loop() {
 }
 void getgps(TinyGPS &gps)
 {
-  // To get all of the data into varialbes that you can use in your code, 
-  // all you need to do is define variables and query the object for the 
-  // data. To see the complete list of functions see keywords.txt file in 
-  // the TinyGPS and NewSoftSerial libs.
-  
-  // Define the variables that will be used
-  // float latitude, longitude;
-  // Then call this function
   gps.f_get_position(&latitude, &longitude);
-  // You can now print variables latitude and longitude
   Serial.print("Lat/Long: "); 
   Serial.print(latitude,5);
    
@@ -161,22 +153,27 @@ void getgps(TinyGPS &gps)
   //////////////////////////////////////////////////////////////////////////전송
   
   char temp[12];
-  sprintf(temp , "D%03d", gps.f_altitude());
+  sprintf(temp , "S%03d", gps.f_altitude());
   Serial.println((String)temp);
-  radio.write(&temp, sizeof(temp));//자이로 세서값 전송
+  radio.write(&temp, sizeof(temp));//gps 속도 값 전송
   delay(100);
   /*
-  String text1= "L"+(String)latitude+"Y"+(String)longitude;
-  Serial.println("L"+(String)latitude+"Y"+to_string(longitude);
-//  Serial.println(PPM);
+  char temp1[32];
+  sprintf(temp1 , "D%3.6fL3.6f", latitude, longitude);
+  Serial.println((String)temp1);
+  radio.write(&temp1, sizeof(temp1));//gps 위도 경도 전송
+*/
+  String text1= "D"+String(latitude,6);
   char text[text1.length()+2];
   text1.toCharArray(text, text1.length()+2);
   radio.write(&text, sizeof(text)); //MQ-135 메시지를 수신자에게 보냄
-*/
-  char temp1[32];
-  sprintf(temp1 , "D%f L %f", latitude, longitude);
-  Serial.println((String)temp1);
-  radio.write(&temp1, sizeof(temp1));//자이로 세서값 전송
+  delay(100);
+  
+  String gs= "M"+String(longitude,6);
+  char gc[gs.length()+2];
+  gs.toCharArray(gc, gs.length()+2);
+  radio.write(&gc, sizeof(gc)); //MQ-135 메시지를 수신자에게 보냄
+  
   //delay(100);
   // Same goes for course///////////////////////////////////
   

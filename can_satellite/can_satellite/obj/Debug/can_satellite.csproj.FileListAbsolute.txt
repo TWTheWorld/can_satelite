@@ -19,3 +19,13 @@ C:\Users\user\Desktop\프로젝트\프로젝트\can_satellite\can_satellite\obj\
 C:\Users\user\Desktop\프로젝트\프로젝트\can_satellite\can_satellite\obj\Debug\can_satellite.csproj.CoreCompileInputs.cache
 C:\Users\user\Desktop\프로젝트\프로젝트\can_satellite\can_satellite\obj\Debug\can_satellite.exe
 C:\Users\user\Desktop\프로젝트\프로젝트\can_satellite\can_satellite\obj\Debug\can_satellite.pdb
+C:\Users\지혜꺼\Desktop\can_satelite-main (1)\can_satelite-main\can_satellite\can_satellite\obj\Debug\can_satellite.csproj.AssemblyReference.cache
+C:\Users\지혜꺼\Desktop\can_satelite-main (1)\can_satelite-main\can_satellite\can_satellite\obj\Debug\can_satellite.Form1.resources
+C:\Users\지혜꺼\Desktop\can_satelite-main (1)\can_satelite-main\can_satellite\can_satellite\obj\Debug\can_satellite.Properties.Resources.resources
+C:\Users\지혜꺼\Desktop\can_satelite-main (1)\can_satelite-main\can_satellite\can_satellite\obj\Debug\can_satellite.csproj.GenerateResource.cache
+C:\Users\지혜꺼\Desktop\can_satelite-main (1)\can_satelite-main\can_satellite\can_satellite\obj\Debug\can_satellite.csproj.CoreCompileInputs.cache
+C:\Users\지혜꺼\Desktop\can_satelite-main (1)\can_satelite-main\can_satellite\can_satellite\obj\Debug\can_satellite.exe
+C:\Users\지혜꺼\Desktop\can_satelite-main (1)\can_satelite-main\can_satellite\can_satellite\obj\Debug\can_satellite.pdb
+C:\Users\지혜꺼\Desktop\can_satelite-main (1)\can_satelite-main\can_satellite\can_satellite\bin\Debug\can_satellite.exe.config
+C:\Users\지혜꺼\Desktop\can_satelite-main (1)\can_satelite-main\can_satellite\can_satellite\bin\Debug\can_satellite.exe
+C:\Users\지혜꺼\Desktop\can_satelite-main (1)\can_satelite-main\can_satellite\can_satellite\bin\Debug\can_satellite.pdb

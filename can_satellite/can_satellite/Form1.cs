@@ -14,9 +14,14 @@ namespace can_satellite
     public partial class Form1 : Form
     {
         int a=1;
+        int b = 1;
+        int c = 1;
+        int d = 1;
+        int tempsensor = 0;
         string str;
         int xyzactivation = 0;//자이로 센서 활성화 on/off 변수
         int gpsactivation = 0;
+        int dltks = 0;
         public Form1()
         {
             InitializeComponent();
@@ -75,18 +80,91 @@ namespace can_satellite
         private void MySerialReceived(object s, EventArgs e)  //여기에서 수신 데이타를 사용자의 용도에 따라 처리한다.
         {
             String ReceiveData = serialPort1.ReadLine();  //시리얼 버터에 수신된 데이타를 ReceiveData 읽어오기
-            if (xyzactivation == 1)
+            char[] ReciveArray = ReceiveData.ToArray();
+            //listBox1.Items.Add(ReceiveData);
+            try
             {
-                int data_x = 0, data_y = 0, data_z = 0;
-                //try {
-                if (ReceiveData.Length == 13)
+                if (xyzactivation == 1 && ReceiveData.Length == 13 && ReciveArray[0] == 'x')
                 {
+                    int data_x = 0, data_y = 0, data_z = 0;
                     data_x = Convert.ToInt32(ReceiveData.Substring(1, 3));
                     data_y = Convert.ToInt32(ReceiveData.Substring(5, 3));
                     data_z = Convert.ToInt32(ReceiveData.Substring(9, 3));
                     xyzchart_drow(data_x, data_y, data_z);
                 }
+                if (ReciveArray[0] == 'a' && dltks == 1)
+                {
+                    float ppm = Convert.ToSingle(ReceiveData.Substring(1, ReceiveData.Length - 1));
+                    ppm_drow(ppm);
+                }
+                if (ReciveArray[0] == 'C' && tempsensor == 1)
+                {
+                    temp_drow(Convert.ToInt32(ReceiveData.Substring(1, 3)));
+                    int hum = (ReciveArray[5] - '0') * 100 + (ReciveArray[6] - '0') * 10 + ReciveArray[7] - '0';
+                    hum_drow(hum);
+                }
+                if(gpsactivation==1 && ReciveArray[0] == 'D')
+                {
+                    label5.Text = ReceiveData.Substring(1, ReceiveData.Length - 1);
+                }
+                if (gpsactivation == 1 && ReciveArray[0] == 'L')
+                {
+                    label6.Text = ReceiveData.Substring(1, ReceiveData.Length - 1);
+                }
+                if (gpsactivation == 1 && ReciveArray[0] == 'S')
+                {
+                    label14.Text = ReceiveData.Substring(1, ReceiveData.Length - 1);
+                }
             }
+            catch (Exception n)
+            {
+                MessageBox.Show("error{0}",n.Message);
+            }
+        }
+        private void temp_drow(int temp)//자이로 센서 chart 그리는 함수
+        {
+            chart3.Series[0].Points.AddXY((double)c, temp);
+
+            if (chart3.Series[0].Points.Count > 8)
+            {
+                chart3.Series[0].Points.RemoveAt(0);
+            }
+
+            chart3.ChartAreas[0].AxisX.Maximum = c;
+            chart3.ChartAreas[0].AxisX.Minimum = chart3.Series[0].Points[0].XValue;
+            chart3.ChartAreas[0].AxisY.Maximum = 100;
+            chart3.ChartAreas[0].AxisY.Minimum = -100;
+            c++;
+        }
+        private void hum_drow(int hum)//자이로 센서 chart 그리는 함수
+        {
+            chart4.Series[0].Points.AddXY((double)d, hum);
+
+            if (chart4.Series[0].Points.Count > 8)
+            {
+                chart4.Series[0].Points.RemoveAt(0);
+            }
+
+            chart4.ChartAreas[0].AxisX.Maximum = d;
+            chart4.ChartAreas[0].AxisX.Minimum = chart4.Series[0].Points[0].XValue;
+            chart4.ChartAreas[0].AxisY.Maximum = 100;
+            chart4.ChartAreas[0].AxisY.Minimum = -100;
+            d++;
+        }
+        private void ppm_drow(float ppm)//자이로 센서 chart 그리는 함수
+        {
+            chart2.Series[0].Points.AddXY((double)b, ppm);
+
+            if (chart2.Series[0].Points.Count > 8)
+            {
+                chart2.Series[0].Points.RemoveAt(0);
+            }
+
+            chart2.ChartAreas[0].AxisX.Maximum = b;
+            chart2.ChartAreas[0].AxisX.Minimum = chart2.Series[0].Points[0].XValue;
+            chart2.ChartAreas[0].AxisY.Maximum = 3500;
+            chart2.ChartAreas[0].AxisY.Minimum = 0;
+            b++;
         }
         private void xyzchart_drow(int data_x, int data_y, int data_z)//자이로 센서 chart 그리는 함수
         {
@@ -133,14 +211,46 @@ namespace can_satellite
             if (gpsactivation == 0)
             {
                 button2.Text = "OFF";
-                xyzactivation = 1;
+                gpsactivation = 1;
                 listBox1.Items.Add("GPS ON");
             }
             else
             {
                 button2.Text = "ON";
-                xyzactivation = 0;
+                gpsactivation = 0;
                 listBox1.Items.Add("GPS OFF");
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (dltks == 0)
+            {
+                button4.Text = "OFF";
+                dltks = 1;
+                listBox1.Items.Add("이산화 탄소 측정 ON");
+            }
+            else
+            {
+                button4.Text = "ON";
+                dltks = 0;
+                listBox1.Items.Add("이산화 탄소 측정 OFF");
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (tempsensor == 0)
+            {
+                button5.Text = "OFF";
+                tempsensor = 1;
+                listBox1.Items.Add("온습도 측정 ON");
+            }
+            else
+            {
+                button5.Text = "ON";
+                tempsensor = 0;
+                listBox1.Items.Add("온습도 측정 OFF");
             }
         }
     }
