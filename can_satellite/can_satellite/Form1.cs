@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.IO.Ports;
+using System.IO;
 namespace can_satellite
 {
     public partial class Form1 : Form
@@ -22,6 +23,7 @@ namespace can_satellite
         int xyzactivation = 0;//자이로 센서 활성화 on/off 변수
         int gpsactivation = 0;
         int dltks = 0;
+        int savevoid = 0;
         public Form1()
         {
             InitializeComponent();
@@ -91,6 +93,10 @@ namespace can_satellite
                     data_y = Convert.ToInt32(ReceiveData.Substring(5, 3));
                     data_z = Convert.ToInt32(ReceiveData.Substring(9, 3));
                     xyzchart_drow(data_x, data_y, data_z);
+                    if (savevoid == 1)
+                    {
+                        xyzchart_save(data_x, data_y, data_z);
+                    }
                 }
                 if (ReciveArray[0] == 'a' && dltks == 1)
                 {
@@ -121,7 +127,7 @@ namespace can_satellite
                 MessageBox.Show("error{0}",n.Message);
             }
         }
-        private void temp_drow(int temp)//자이로 센서 chart 그리는 함수
+        private void temp_drow(int temp)//온도 센서 chart 그리는 함수
         {
             chart3.Series[0].Points.AddXY((double)c, temp);
 
@@ -132,11 +138,19 @@ namespace can_satellite
 
             chart3.ChartAreas[0].AxisX.Maximum = c;
             chart3.ChartAreas[0].AxisX.Minimum = chart3.Series[0].Points[0].XValue;
-            chart3.ChartAreas[0].AxisY.Maximum = 100;
-            chart3.ChartAreas[0].AxisY.Minimum = -100;
+            chart3.ChartAreas[0].AxisY.Maximum = 50;
+            chart3.ChartAreas[0].AxisY.Minimum = -50;
             c++;
         }
-        private void hum_drow(int hum)//자이로 센서 chart 그리는 함수
+        private void xyzchart_save(int x,int y, int z)
+        {
+            
+            StreamWriter writer;
+            writer = File.AppendText("./xyz.txt");
+            writer.WriteLine(x.ToString()+","+ y.ToString()+","+ z.ToString()+ DateTime.Now.ToString("yymmdd"));
+            writer.Close();
+        }
+        private void hum_drow(int hum)//습도 센서 chart 그리는 함수
         {
             chart4.Series[0].Points.AddXY((double)d, hum);
 
@@ -148,7 +162,7 @@ namespace can_satellite
             chart4.ChartAreas[0].AxisX.Maximum = d;
             chart4.ChartAreas[0].AxisX.Minimum = chart4.Series[0].Points[0].XValue;
             chart4.ChartAreas[0].AxisY.Maximum = 100;
-            chart4.ChartAreas[0].AxisY.Minimum = -100;
+            chart4.ChartAreas[0].AxisY.Minimum = 0;
             d++;
         }
         private void ppm_drow(float ppm)//자이로 센서 chart 그리는 함수
@@ -251,6 +265,35 @@ namespace can_satellite
                 button5.Text = "ON";
                 tempsensor = 0;
                 listBox1.Items.Add("온습도 측정 OFF");
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                StreamWriter writer;
+                writer = File.CreateText("./writeTest.txt");
+                writer.WriteLine("텍스트 파일 세로 쓰기 성공");
+                writer.Close();
+            }catch(Exception m)
+            {
+                StreamWriter writer;
+                writer = File.AppendText("./writeTest.txt");
+                writer.WriteLine("텍스트 파일 이어 쓰기 성공");
+                writer.Close();
+            }
+            if (savevoid == 0)
+            {
+                button6.Text = "OFF";
+                savevoid = 1;
+                listBox1.Items.Add("저장 ON");
+            }
+            else
+            {
+                button6.Text = "ON";
+                savevoid = 0;
+                listBox1.Items.Add("저장 OFF");
             }
         }
     }
