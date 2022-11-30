@@ -49,7 +49,7 @@ namespace can_satellite
             chart1.ChartAreas[0].AxisX.Minimum = chart1.Series[0].Points[0].XValue;
             a++;
         }
-
+        
         private void Serial_connect_Click(object sender, EventArgs e)
         {
 
@@ -102,12 +102,22 @@ namespace can_satellite
                 {
                     float ppm = Convert.ToSingle(ReceiveData.Substring(1, ReceiveData.Length - 1));
                     ppm_drow(ppm);
+                    if (savevoid == 1)
+                    {
+                        ppm_save(ppm);
+                    }
                 }
                 if (ReciveArray[0] == 'C' && tempsensor == 1)
                 {
                     temp_drow(Convert.ToInt32(ReceiveData.Substring(1, 3)));
+                    
                     int hum = (ReciveArray[5] - '0') * 100 + (ReciveArray[6] - '0') * 10 + ReciveArray[7] - '0';
                     hum_drow(hum);
+                    if (savevoid == 1)
+                    {
+                        temp_save(Convert.ToInt32(ReceiveData.Substring(1, 3)));
+                        hum_save(hum);
+                    }
                 }
                 if(gpsactivation==1 && ReciveArray[0] == 'D')
                 {
@@ -142,12 +152,34 @@ namespace can_satellite
             chart3.ChartAreas[0].AxisY.Minimum = -50;
             c++;
         }
+
         private void xyzchart_save(int x,int y, int z)
-        {
-            
+        {   
             StreamWriter writer;
             writer = File.AppendText("./xyz.txt");
             writer.WriteLine(x.ToString()+","+ y.ToString()+","+ z.ToString()+ DateTime.Now.ToString("yymmdd"));
+            writer.Close();
+        }
+
+        private void ppm_save(float a)
+        {
+            StreamWriter writer;
+            writer = File.AppendText("./ppm.txt");
+            writer.WriteLine(a.ToString() + DateTime.Now.ToString("yymmdd"));
+            writer.Close();
+        }
+        private void hum_save(int hum)
+        {
+            StreamWriter writer;
+            writer = File.AppendText("./hum.txt");
+            writer.WriteLine(hum.ToString() + DateTime.Now.ToString("yymmdd"));
+            writer.Close();
+        }
+        private void temp_save(int temp)
+        {
+            StreamWriter writer;
+            writer = File.AppendText("./temp.txt");
+            writer.WriteLine(temp.ToString() + DateTime.Now.ToString("yymmdd"));
             writer.Close();
         }
         private void hum_drow(int hum)//습도 센서 chart 그리는 함수
@@ -270,19 +302,19 @@ namespace can_satellite
 
         private void button6_Click(object sender, EventArgs e)
         {
-            try
-            {
-                StreamWriter writer;
-                writer = File.CreateText("./writeTest.txt");
-                writer.WriteLine("텍스트 파일 세로 쓰기 성공");
-                writer.Close();
-            }catch(Exception m)
-            {
-                StreamWriter writer;
-                writer = File.AppendText("./writeTest.txt");
-                writer.WriteLine("텍스트 파일 이어 쓰기 성공");
-                writer.Close();
-            }
+            //try
+            //{
+             //   StreamWriter writer;
+              //  writer = File.CreateText("./writeTest.txt");
+               // writer.WriteLine("텍스트 파일 세로 쓰기 성공");
+                //writer.Close();
+            //}catch(Exception m)
+            //{
+              //  StreamWriter writer;
+               // writer = File.AppendText("./writeTest.txt");
+              //  writer.WriteLine("텍스트 파일 이어 쓰기 성공");
+              //  writer.Close();
+            //}
             if (savevoid == 0)
             {
                 button6.Text = "OFF";
@@ -295,6 +327,14 @@ namespace can_satellite
                 savevoid = 0;
                 listBox1.Items.Add("저장 OFF");
             }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            chart1.Series.Clear();
+            chart2.Series.Clear();
+            chart3.Series.Clear();
+            chart4.Series.Clear();
         }
     }
 }
