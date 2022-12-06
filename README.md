@@ -1,5 +1,10 @@
-# can_satelite
+# can_satelite 시스템
 하드 웨어 H/W<br>
+<b>The World팀</b>
+<ul>
+  <li>박민성, 김준일: 하드웨어 코딩과 디자인</li>
+  <li>이지석: 하드웨어 코딩과 c#</li>
+</ul>
 
 <ul>
   <li>arduino mega 2560</li> 
